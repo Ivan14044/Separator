@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунты</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://i.postimg.cc/x1gGnxqH/background1920x1080.jpg');
+            background-size: cover;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1, h2 {
+            color: #FFA500;
+        }
+
+        textarea {
+            width: calc(100% - 40px);
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #FFA500;
+            background-color: #444;
+            color: #fff;
+            resize: vertical;
+        }
+
+        .file-input-container {
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-label {
+            background-color: #FFA500;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .file-input-label:hover {
+            background-color: #FF8C00;
+        }
+
+        button {
+            background-color: #FFA500;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FF8C00;
+        }
+
+        .table-container {
+            text-align: center;
+            overflow-x: auto;
+            position: relative; /* Добавляем позиционирование */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            table-layout: auto;
+            word-wrap: break-word;
+            border: 2px solid #777;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #777;
+            text-align: left;
+            max-width: 200px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: #FF8C00;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #555;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #FFA500 !important;
+            border-radius: 5px;
+        }
+
+        /* Всплывающее окно */
+        .tooltip {
+            position: absolute;
+            z-index: 9999; /* Устанавливаем высокий z-index */
+            background-color: #FFA500; /* Оранжевый фон */
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none;
+            top: calc(100% + 5px);
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://i.postimg.cc/XYPcfM32/banner3232323.jpg" alt="banner" onclick="window.location.href='https://account-factory.com.ua/'" style="max-width: 80%; margin-bottom: 20px; cursor: pointer;">
+    <h1>Введите аккаунты или</h1>
+    <div class="file-input-container">
+        <input type="file" id="fileInput" class="file-input">
+        <label for="fileInput" class="file-input-label">Выберите файл</label>
+    </div>
+    <br>
+    <textarea id="accountsInput" rows="4" placeholder="Выберите файл или вставьте содержимое файла в поле ввода"></textarea>
+    <br>
+    <button onclick="showAccounts()">Показать</button>
+
+    <hr>
+
+    <div id="accountsTable" class="table-container"></div>
+
+    <!-- Всплывающее окно -->
+    <div id="tooltip" class="tooltip"></div>
+</div>
+
+<script>
+    function showAccounts() {
+        var accountsInput = document.getElementById("accountsInput").value.trim();
+        var accountsArray = accountsInput.split("\n");
+
+        var tableContent = "<table><tr><th>#</th><th>Логин</th><th>Пароль</th><th>Почта</th><th>Пароль от почты</th><th>Имя</th><th>Фамилия</th><th>Ссылка соц аккаунта</th><th>День рождения</th><th>Месяц рождения</th><th>Год рождения</th><th>Токен</th><th>ID ads</th><th>Куки</th><th>Юзер агент</th><th>2FA</th><th>Доп. информация об аккаунте</th><th>Доп. информация об аккаунте 2</th><th>Доп. информация об аккаунте 3</th><th>Доп. информация об аккаунте 4</th></tr>";
+
+        accountsArray.forEach(function (account, index) { // Добавляем index для отслеживания номера строки
+            var fields = account.split("|");
+            var [login, password, email, emailPassword, firstName, lastName, socialLink, day, month, year, token, idAds, cookies, userAgent, twoFA, additionalInfo1, additionalInfo2, additionalInfo3, additionalInfo4] = fields;
+
+            tableContent += "<tr>";
+            tableContent += "<td>" + (index + 1) + "</td>"; // Выводим номер строки
+            tableContent += "<td title='" + login + "' onclick='copyToClipboard(this)'>" + login + "</td>";
+            tableContent += "<td title='" + password + "' onclick='copyToClipboard(this)'>" + password + "</td>";
+            tableContent += "<td title='" + email + "' onclick='copyToClipboard(this)'>" + email + "</td>";
+            tableContent += "<td title='" + emailPassword + "' onclick='copyToClipboard(this)'>" + emailPassword + "</td>";
+            tableContent += "<td title='" + firstName + "' onclick='copyToClipboard(this)'>" + firstName + "</td>";
+            tableContent += "<td title='" + lastName + "' onclick='copyToClipboard(this)'>" + lastName + "</td>";
+            tableContent += "<td title='" + socialLink + "' onclick='copyToClipboard(this)'>" + socialLink + "</td>";
+            tableContent += "<td title='" + day + "' onclick='copyToClipboard(this)'>" + day + "</td>";
+            tableContent += "<td title='" + month + "' onclick='copyToClipboard(this)'>" + month + "</td>";
+            tableContent += "<td title='" + year + "' onclick='copyToClipboard(this)'>" + year + "</td>";
+            tableContent += "<td title='" + token + "' onclick='copyToClipboard(this)'>" + token + "</td>";
+            tableContent += "<td title='" + idAds + "' onclick='copyToClipboard(this)'>" + idAds + "</td>";
+            tableContent += "<td title='" + cookies + "' onclick='copyToClipboard(this)'>" + cookies + "</td>";
+            tableContent += "<td title='" + userAgent + "' onclick='copyToClipboard(this)'>" + userAgent + "</td>";
+            tableContent += "<td title='" + twoFA + "' onclick='copyToClipboard(this)'>" + twoFA + "</td>";
+            tableContent += "<td title='" + (additionalInfo1 || '') + "' onclick='copyToClipboard(this)'>" + (additionalInfo1 || '') + "</td>";
+            tableContent += "<td title='" + (additionalInfo2 || '') + "' onclick='copyToClipboard(this)'>" + (additionalInfo2 || '') + "</td>";
+            tableContent += "<td title='" + (additionalInfo3 || '') + "' onclick='copyToClipboard(this)'>" + (additionalInfo3 || '') + "</td>";
+            tableContent += "<td title='" + (additionalInfo4 || '') + "' onclick='copyToClipboard(this)'>" + (additionalInfo4 || '') + "</td>";
+            tableContent += "</tr>";
+        });
+
+        tableContent += "</table>";
+        document.getElementById("accountsTable").innerHTML = tableContent;
+    }
+
+    // Функция для копирования содержимого ячейки в буфер обмена
+    function copyToClipboard(element) {
+        var text = element.innerText;
+        navigator.clipboard.writeText(text);
+
+        // Отображаем всплывающее окно с сообщением о копировании
+        var tooltip = document.getElementById("tooltip");
+        tooltip.innerText = "Содержимое скопировано: " + text;
+        tooltip.style.display = "block";
+        tooltip.style.left = element.offsetLeft + "px"; // Позиционируем окно рядом с ячейкой
+        tooltip.style.top = element.offsetTop + element.offsetHeight + 5 + "px"; // Позиционируем окно над ячейкой
+
+        // Скрываем всплывающее окно через 2 секунды
+        setTimeout(function () {
+            tooltip.style.display = "none";
+        }, 2000);
+    }
+
+    // Обработчик события выбора файла
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+            document.getElementById('accountsInput').value = event.target.result;
+        };
+
+        reader.readAsText(file);
+    });
+</script>
+
+</body>
+</html>
